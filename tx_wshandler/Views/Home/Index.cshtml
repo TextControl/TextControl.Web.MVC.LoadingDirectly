@@ -1,0 +1,72 @@
+﻿@using TXTextControl.Web
+@using TXTextControl.Web.MVC
+
+@Html.TXTextControl().TextControl().Render()
+
+<button onclick="loadDocument('invoice.docx')">Load Document</button>
+<button onclick="saveDocument()">Save Document</button>
+
+<script>
+    var txSettings; 
+    var loadedDocument;
+
+    // this function loads a document directly server-side
+    function loadDocument(documentName)
+    {
+        // call the Web API endpoint LoadDocument with the
+        // stored, current ConnectionID
+        var serviceURL = "/api/TXDocument/LoadDocument?ConnectionID="
+            + txSettings.ConnectionID +
+            "&DocumentName=" + documentName;
+
+        $.ajax({
+            type: "GET",
+            url: serviceURL,
+            contentType: 'application/json',
+            success: successFunc,
+            error: errorFunc
+        });
+
+        function successFunc(data, status) {
+            // set the loaded document name
+            loadedDocument = documentName;
+        }
+
+        function errorFunc() {
+            console.log("An error occured.");
+        }
+    }
+
+    // this function saves the document directly server-side
+    function saveDocument() {
+        var serviceURL = "/api/TXDocument/SaveDocument?ConnectionID="
+            + txSettings.ConnectionID
+            + "&DocumentName=" + loadedDocument;
+
+        $.ajax({
+            type: "GET",
+            url: serviceURL,
+            contentType: 'application/json',
+            success: successFunc,
+            error: errorFunc
+        });
+
+        function successFunc(data, status) {
+            console.log("Document has been saved.");
+        }
+
+        function errorFunc() {
+            console.log("An error occured.");
+        }
+    }
+
+    function checkSettings()
+    {
+        // store Text Control settings
+        var settings = document.querySelector("#__txSettings");
+        txSettings = JSON.parse(settings.textContent); 
+    }
+
+    checkSettings();
+
+</script>
