@@ -16,8 +16,8 @@
         // call the Web API endpoint LoadDocument with the
         // stored, current ConnectionID
         var serviceURL = "/api/TXDocument/LoadDocument?ConnectionID="
-            + txSettings.ConnectionID +
-            "&DocumentName=" + documentName;
+            + encodeURIComponent(txSettings.ConnectionID)
+            + "&DocumentName=" + documentName;
 
         $.ajax({
             type: "GET",
@@ -40,7 +40,7 @@
     // this function saves the document directly server-side
     function saveDocument() {
         var serviceURL = "/api/TXDocument/SaveDocument?ConnectionID="
-            + txSettings.ConnectionID
+            + encodeURIComponent(txSettings.ConnectionID)
             + "&DocumentName=" + loadedDocument;
 
         $.ajax({
